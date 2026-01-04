@@ -39,6 +39,11 @@ export interface Comment {
 export interface Organization {
   orgId: string;
   name: string;
+  createdAt?: string;
+}
+
+export interface CreateOrganizationRequest {
+  name: string;
 }
 
 export interface LoginToken {
