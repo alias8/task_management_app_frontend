@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { PublicRoute } from './components/PublicRoute';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Tasks } from './pages/Tasks';
@@ -16,25 +17,34 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route
-            path="/tasks"
+            path="/login"
             element={
-              <ProtectedRoute>
-                <Tasks />
-              </ProtectedRoute>
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
             }
           />
           <Route
-            path="/tasks/:taskId"
+            path="/signup"
+            element={
+              <PublicRoute>
+                <Signup />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/*"
             element={
               <ProtectedRoute>
-                <TaskDetail />
+                <Routes>
+                  <Route path="/tasks" element={<Tasks />} />
+                  <Route path="/tasks/:taskId" element={<TaskDetail />} />
+                  <Route path="/" element={<Navigate to="/tasks" replace />} />
+                </Routes>
               </ProtectedRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/tasks" replace />} />
         </Routes>
       </AuthProvider>
     </Router>
