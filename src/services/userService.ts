@@ -1,5 +1,5 @@
 import apiClient from './api';
-import { User, CreateUserRequest, LoginRequest, LoginToken } from '../types';
+import { CreateUserRequest, LoginRequest, LoginToken, User } from '../types';
 
 export const userService = {
   getAllUsers: async (): Promise<User[]> => {
@@ -18,12 +18,17 @@ export const userService = {
   },
 
   login: async (credentials: LoginRequest): Promise<LoginToken> => {
-    const response = await apiClient.post<LoginToken>('/api/users/login', credentials);
+    const response = await apiClient.post<LoginToken>(
+      '/api/users/login',
+      credentials
+    );
     return response.data;
   },
 
   getCurrentUser: async (): Promise<{ email: string; message: string }> => {
-    const response = await apiClient.get<{ email: string; message: string }>('/api/users/me');
+    const response = await apiClient.get<{ email: string; message: string }>(
+      '/api/users/me'
+    );
     return response.data;
   },
 

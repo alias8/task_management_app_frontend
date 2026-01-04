@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+
+# Production
+dist
+build
+
+# Misc
+.env
+.env.local
+.env.production.local
+.env.development.local
+*.log
+
+# IDE
+.idea
+.vscode
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

@@ -1,11 +1,22 @@
 import apiClient from './api';
-import { Task, CreateTaskRequest, UpdateTaskRequest, PaginatedResponse } from '../types';
+import {
+  CreateTaskRequest,
+  PaginatedResponse,
+  Task,
+  UpdateTaskRequest,
+} from '../types';
 
 export const taskService = {
-  getAllTasks: async (page = 0, size = 10): Promise<PaginatedResponse<Task>> => {
-    const response = await apiClient.get<PaginatedResponse<Task>>('/api/tasks', {
-      params: { page, size, sort: 'createdAt,desc' },
-    });
+  getAllTasks: async (
+    page = 0,
+    size = 10
+  ): Promise<PaginatedResponse<Task>> => {
+    const response = await apiClient.get<PaginatedResponse<Task>>(
+      '/api/tasks',
+      {
+        params: { page, size, sort: 'createdAt,desc' },
+      }
+    );
     return response.data;
   },
 
