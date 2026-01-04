@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { taskService } from '../services/taskService';
 import { commentService } from '../services/commentService';
@@ -8,14 +8,18 @@ export const TaskDetail = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
   const [task, setTask] = useState<Task | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [taskLoading, setTaskLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
 
+  const isFetchingTask = useRef(false);
+  const isFetchingComments = useRef(false);
+
   const fetchTask = useCallback(async () => {
-    if (!taskId) return;
-    setLoading(true);
+    if (!taskId || isFetchingTask.current) return;
+    isFetchingTask.current = true;
+    setTaskLoading(true);
     setError(null);
     try {
       const response = await taskService.getTaskById(taskId);
@@ -24,12 +28,14 @@ export const TaskDetail = () => {
       console.error('Failed to fetch task:', error);
       setError('Failed to load task. Please try again.');
     } finally {
-      setLoading(false);
+      setTaskLoading(false);
+      isFetchingTask.current = false;
     }
   }, [taskId]);
 
   const fetchComments = useCallback(async () => {
-    if (!taskId) return;
+    if (!taskId || isFetchingComments.current) return;
+    isFetchingComments.current = true;
     setCommentsLoading(true);
     try {
       const response = await commentService.listComments(taskId);
@@ -38,6 +44,7 @@ export const TaskDetail = () => {
       console.error('Failed to fetch comments:', error);
     } finally {
       setCommentsLoading(false);
+      isFetchingComments.current = false;
     }
   }, [taskId]);
 
@@ -72,7 +79,7 @@ export const TaskDetail = () => {
     }
   };
 
-  if (loading) {
+  if (taskLoading) {
     return <div>Loading...</div>;
   }
 
