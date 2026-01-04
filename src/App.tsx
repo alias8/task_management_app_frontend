@@ -9,6 +9,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Tasks } from './pages/Tasks';
+import { TaskDetail } from './pages/TaskDetail';
 
 function App() {
   return (
@@ -22,6 +23,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Tasks />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tasks/:taskId"
+            element={
+              <ProtectedRoute>
+                <TaskDetail />
               </ProtectedRoute>
             }
           />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { taskService } from '../services/taskService';
 import { type CreateTaskRequest, type Task, TaskStatus } from '../types';
@@ -178,7 +179,14 @@ export const Tasks = () => {
                   }}
                 >
                   <div style={{ flex: 1 }}>
-                    <h3 style={{ marginTop: 0 }}>{task.title}</h3>
+                    <h3 style={{ marginTop: 0 }}>
+                      <Link
+                        to={`/tasks/${task.taskId}`}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                      >
+                        {task.title}
+                      </Link>
+                    </h3>
                     {task.taskDescription && <p>{task.taskDescription}</p>}
                     <div
                       style={{
