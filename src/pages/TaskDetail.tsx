@@ -222,7 +222,7 @@ export const TaskDetail = () => {
               >
                 <p style={{ margin: '0 0 10px 0' }}>{comment.body}</p>
                 <div style={{ fontSize: '0.85em', color: '#666' }}>
-                  <span>User ID: {comment.userId}</span>
+                  <span>User: {comment.creatorName}</span>
                   <span style={{ margin: '0 10px' }}>•</span>
                   <span>
                     {new Date(comment.createdAt).toLocaleDateString()}{' '}

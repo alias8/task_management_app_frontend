@@ -34,6 +34,7 @@ export interface Comment {
   userId: string;
   body: string;
   createdAt: string;
+  creatorName: string;
 }
 
 export interface Organization {
