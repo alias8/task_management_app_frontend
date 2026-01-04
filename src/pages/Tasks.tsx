@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { taskService } from '../services/taskService';
-import { CreateTaskRequest, Task, TaskStatus } from '../types';
+import { type CreateTaskRequest, type Task, TaskStatus } from '../types';
 
 export const Tasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

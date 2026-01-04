@@ -1,5 +1,10 @@
 import apiClient from './api';
-import { CreateUserRequest, LoginRequest, LoginToken, User } from '../types';
+import type {
+  CreateUserRequest,
+  LoginRequest,
+  LoginToken,
+  User,
+} from '../types';
 
 export const userService = {
   getAllUsers: async (): Promise<User[]> => {

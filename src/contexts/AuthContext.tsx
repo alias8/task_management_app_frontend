@@ -1,6 +1,6 @@
-import { createContext, ReactNode, use, useState } from 'react';
+import { createContext, type ReactNode, use, useState } from 'react';
 import { userService } from '../services/userService';
-import { CreateUserRequest, LoginRequest } from '../types';
+import type { CreateUserRequest, LoginRequest } from '../types';
 
 interface AuthContextType {
   isAuthenticated: boolean;
