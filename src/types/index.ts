@@ -32,7 +32,7 @@ export interface Comment {
   commentId: string;
   taskId: string;
   userId: string;
-  commentText: string;
+  body: string;
   createdAt: string;
 }
 
