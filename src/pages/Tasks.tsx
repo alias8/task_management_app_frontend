@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { taskService } from '../services/taskService';
@@ -14,7 +14,11 @@ export const Tasks = () => {
   });
   const { logout } = useAuth();
 
+  const isFetchingTasks = useRef(false);
+
   const fetchTasks = async () => {
+    if (isFetchingTasks.current) return;
+    isFetchingTasks.current = true;
     try {
       const response = await taskService.getAllTasks();
       setTasks(response.content);
@@ -22,6 +26,7 @@ export const Tasks = () => {
       console.error('Failed to fetch tasks:', error);
     } finally {
       setLoading(false);
+      isFetchingTasks.current = false;
     }
   };
 

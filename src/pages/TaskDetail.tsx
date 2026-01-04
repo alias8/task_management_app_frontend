@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { taskService } from '../services/taskService';
 import { commentService } from '../services/commentService';
@@ -16,7 +16,7 @@ export const TaskDetail = () => {
   const isFetchingTask = useRef(false);
   const isFetchingComments = useRef(false);
 
-  const fetchTask = useCallback(async () => {
+  const fetchTask = async () => {
     if (!taskId || isFetchingTask.current) return;
     isFetchingTask.current = true;
     setTaskLoading(true);
@@ -31,9 +31,9 @@ export const TaskDetail = () => {
       setTaskLoading(false);
       isFetchingTask.current = false;
     }
-  }, [taskId]);
+  };
 
-  const fetchComments = useCallback(async () => {
+  const fetchComments = async () => {
     if (!taskId || isFetchingComments.current) return;
     isFetchingComments.current = true;
     setCommentsLoading(true);
@@ -46,12 +46,12 @@ export const TaskDetail = () => {
       setCommentsLoading(false);
       isFetchingComments.current = false;
     }
-  }, [taskId]);
+  };
 
   useEffect(() => {
     void fetchTask();
     void fetchComments();
-  }, [fetchComments, fetchTask]);
+  }, []);
 
   const handleUpdateStatus = (status: TaskStatus) => {
     if (!taskId) return;
