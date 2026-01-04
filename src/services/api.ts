@@ -1,8 +1,9 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
+// In development, use empty baseURL to leverage Vite proxy (avoids CORS)
+// In production, set VITE_API_BASE_URL to your backend URL
 const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
-  'http://localhost:8080';
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
