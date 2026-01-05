@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, use, useState } from 'react';
+import { createContext, type ReactNode, use, useEffect, useState } from 'react';
 import { userService } from '../services/userService';
 import type { CreateUserRequest, LoginRequest } from '../types';
 import { jwtDecode } from 'jwt-decode';
@@ -7,6 +7,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   userId: string;
+  loading: boolean;
   login: (credentials: LoginRequest) => Promise<void>;
   signup: (userData: CreateUserRequest) => Promise<void>;
   logout: () => void;
@@ -23,6 +24,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [decodedToken, setDecodedToken] = useState<JwtPayload | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      try {
+        const decoded: JwtPayload = jwtDecode(token);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setDecodedToken(decoded);
+      } catch (error) {
+        console.error('Invalid token in localStorage:', error);
+        localStorage.removeItem('authToken');
+      }
+    }
+    setLoading(false);
+  }, []);
 
   const login = async (credentials: LoginRequest) => {
     const response = await userService.login(credentials);
@@ -46,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated: !!decodedToken,
         isAdmin: decodedToken?.isAdmin ?? false,
         userId: decodedToken?.userId ?? '',
+        loading,
         login,
         signup,
         logout,
