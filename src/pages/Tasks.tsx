@@ -48,7 +48,7 @@ export const Tasks = () => {
     })();
   };
 
-  const handleUpdateStatus = (taskId: string, status: TaskStatus) => {
+  const handleUpdateStatus = (taskId: string, status: keyof typeof TaskStatus) => {
     void (async () => {
       try {
         await taskService.updateTask(taskId, { status });
@@ -220,7 +220,7 @@ export const Tasks = () => {
                       onChange={e =>
                         handleUpdateStatus(
                           task.taskId,
-                          e.target.value as TaskStatus
+                          e.target.value as keyof typeof TaskStatus
                         )
                       }
                       style={{ padding: '5px' }}

@@ -1,20 +1,20 @@
-export enum TaskStatus {
-  OPEN = 'OPEN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  CLOSED = 'CLOSED',
-}
+export const TaskStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  CLOSED: 'CLOSED',
+} as const;
 
-export enum UserRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-}
+export const UserRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+} as const;
 
 export interface User {
   userId: string;
   orgId: string;
   name: string;
   email: string;
-  role: UserRole;
+  role: keyof typeof UserRole;
 }
 
 export interface Task {
@@ -23,7 +23,7 @@ export interface Task {
   userIdOfCreator: string;
   title: string;
   taskDescription: string;
-  status: TaskStatus;
+  status: keyof typeof TaskStatus;
   createdAt: string;
   updatedAt: string;
 }
@@ -73,7 +73,7 @@ export interface CreateTaskRequest {
 export interface UpdateTaskRequest {
   title?: string;
   taskDescription?: string;
-  status?: TaskStatus;
+  status?: keyof typeof TaskStatus;
 }
 
 export interface AddCommentRequest {

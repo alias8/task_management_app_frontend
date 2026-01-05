@@ -57,7 +57,7 @@ export const TaskDetail = () => {
     void fetchComments();
   }, []);
 
-  const handleUpdateStatus = (status: TaskStatus) => {
+  const handleUpdateStatus = (status: keyof typeof TaskStatus) => {
     if (!taskId) return;
     void (async () => {
       try {
@@ -205,7 +205,7 @@ export const TaskDetail = () => {
             <select
               id="status"
               value={task.status}
-              onChange={e => handleUpdateStatus(e.target.value as TaskStatus)}
+              onChange={e => handleUpdateStatus(e.target.value as keyof typeof TaskStatus)}
               style={{ padding: '8px' }}
               disabled={!isAdmin}
             >
