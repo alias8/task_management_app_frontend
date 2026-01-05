@@ -29,12 +29,11 @@ export interface Task {
 }
 
 export interface Comment {
-  commentId: string;
-  taskId: string;
-  userId: string;
   body: string;
+  commentId: string;
   createdAt: string;
   creatorName: string;
+  userIdOfCreator: string;
 }
 
 export interface Organization {

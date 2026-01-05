@@ -314,9 +314,11 @@ export const TaskDetail = () => {
                   <p style={{ margin: '0 0 10px 0', flex: 1 }}>
                     {comment.body}
                   </p>
-                  {userId === comment.userId && (
+                  {userId === comment.userIdOfCreator && (
                     <button
-                      onClick={() => void handleDeleteComment(comment.commentId)}
+                      onClick={() =>
+                        void handleDeleteComment(comment.commentId)
+                      }
                       style={{
                         padding: '4px 8px',
                         backgroundColor: '#dc3545',
