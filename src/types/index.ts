@@ -78,7 +78,7 @@ export interface UpdateTaskRequest {
 }
 
 export interface AddCommentRequest {
-  commentText: string;
+  body: string;
 }
 
 export interface PaginatedResponse<T> {

@@ -14,6 +14,8 @@ export const TaskDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
   const isFetchingTask = useRef(false);
   const isFetchingComments = useRef(false);
@@ -78,6 +80,22 @@ export const TaskDetail = () => {
           console.error('Failed to delete task:', error);
         }
       })();
+    }
+  };
+
+  const handleAddComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!taskId || !newComment.trim()) return;
+
+    setIsSubmittingComment(true);
+    try {
+      await commentService.addComment(taskId, { body: newComment });
+      setNewComment('');
+      await fetchComments();
+    } catch (error) {
+      console.error('Failed to add comment:', error);
+    } finally {
+      setIsSubmittingComment(false);
     }
   };
 
@@ -214,6 +232,45 @@ export const TaskDetail = () => {
         }}
       >
         <h2 style={{ marginTop: 0 }}>Comments</h2>
+
+        <form onSubmit={handleAddComment} style={{ marginBottom: '20px' }}>
+          <textarea
+            value={newComment}
+            onChange={e => setNewComment(e.target.value)}
+            placeholder="Add a comment..."
+            rows={3}
+            style={{
+              width: '100%',
+              padding: '10px',
+              borderRadius: '3px',
+              border: '1px solid #ccc',
+              fontSize: '0.95em',
+              fontFamily: 'inherit',
+              resize: 'vertical',
+              boxSizing: 'border-box',
+            }}
+          />
+          <button
+            type="submit"
+            disabled={!newComment.trim() || isSubmittingComment}
+            style={{
+              marginTop: '10px',
+              padding: '8px 16px',
+              backgroundColor:
+                !newComment.trim() || isSubmittingComment ? '#ccc' : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '3px',
+              cursor:
+                !newComment.trim() || isSubmittingComment
+                  ? 'not-allowed'
+                  : 'pointer',
+            }}
+          >
+            {isSubmittingComment ? 'Adding...' : 'Add Comment'}
+          </button>
+        </form>
+
         {commentsLoading ? (
           <p>Loading comments...</p>
         ) : comments.length === 0 ? (
