@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
+  userId: string;
   login: (credentials: LoginRequest) => Promise<void>;
   signup: (userData: CreateUserRequest) => Promise<void>;
   logout: () => void;
@@ -14,7 +15,7 @@ interface AuthContextType {
 
 interface JwtPayload {
   isAdmin: boolean;
-  sub: string;
+  sub: string; // email
   orgId: string;
   userId: string;
 }

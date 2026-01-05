@@ -26,4 +26,8 @@ export const commentService = {
     );
     return response.data;
   },
+
+  deleteComment: async (taskId: string, commentId: string): Promise<void> => {
+    await apiClient.delete(`/api/tasks/${taskId}/comments/${commentId}`);
+  },
 };

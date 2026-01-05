@@ -4,6 +4,12 @@ import { useAuth } from '../contexts/AuthContext';
 import { taskService } from '../services/taskService';
 import { commentService } from '../services/commentService';
 import { type Comment, type Task, TaskStatus } from '../types';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  userId: string;
+  isAdmin: boolean;
+}
 
 export const TaskDetail = () => {
   const { taskId } = useParams<{ taskId: string }>();
@@ -19,6 +25,17 @@ export const TaskDetail = () => {
 
   const isFetchingTask = useRef(false);
   const isFetchingComments = useRef(false);
+
+  const getCurrentUserId = (): string | null => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return null;
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      return decoded.userId;
+    } catch {
+      return null;
+    }
+  };
 
   const fetchTask = async () => {
     if (!taskId || isFetchingTask.current) return;
@@ -97,6 +114,25 @@ export const TaskDetail = () => {
     } finally {
       setIsSubmittingComment(false);
     }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!taskId) return;
+    if (window.confirm('Are you sure you want to delete this comment?')) {
+      try {
+        await commentService.deleteComment(taskId, commentId);
+        await fetchComments();
+      } catch (error) {
+        console.error('Failed to delete comment:', error);
+      }
+    }
+  };
+
+  const canDeleteComment = (comment: Comment): boolean => {
+    const currentUserId = getCurrentUserId();
+    return (
+      isAdmin || (currentUserId !== null && comment.userId === currentUserId)
+    );
   };
 
   if (taskLoading) {
@@ -233,7 +269,10 @@ export const TaskDetail = () => {
       >
         <h2 style={{ marginTop: 0 }}>Comments</h2>
 
-        <form onSubmit={handleAddComment} style={{ marginBottom: '20px' }}>
+        <form
+          onSubmit={() => handleAddComment}
+          style={{ marginBottom: '20px' }}
+        >
           <textarea
             value={newComment}
             onChange={e => setNewComment(e.target.value)}
@@ -289,7 +328,34 @@ export const TaskDetail = () => {
                   borderRadius: '3px',
                 }}
               >
-                <p style={{ margin: '0 0 10px 0' }}>{comment.body}</p>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'start',
+                  }}
+                >
+                  <p style={{ margin: '0 0 10px 0', flex: 1 }}>
+                    {comment.body}
+                  </p>
+                  {canDeleteComment(comment) && (
+                    <button
+                      onClick={() => handleDeleteComment(comment.commentId)}
+                      style={{
+                        padding: '4px 8px',
+                        backgroundColor: '#dc3545',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '3px',
+                        cursor: 'pointer',
+                        fontSize: '0.85em',
+                        marginLeft: '10px',
+                      }}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
                 <div style={{ fontSize: '0.85em', color: '#666' }}>
                   <span>User: {comment.creatorName}</span>
                   <span style={{ margin: '0 10px' }}>•</span>
