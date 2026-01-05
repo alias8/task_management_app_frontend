@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { taskService } from '../services/taskService';
 import { commentService } from '../services/commentService';
 import { type Comment, type Task, TaskStatus } from '../types';
@@ -7,6 +8,7 @@ import { type Comment, type Task, TaskStatus } from '../types';
 export const TaskDetail = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [task, setTask] = useState<Task | null>(null);
   const [taskLoading, setTaskLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -175,6 +177,7 @@ export const TaskDetail = () => {
               value={task.status}
               onChange={e => handleUpdateStatus(e.target.value as TaskStatus)}
               style={{ padding: '8px' }}
+              disabled={!isAdmin}
             >
               <option value={TaskStatus.OPEN}>Open</option>
               <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
@@ -186,12 +189,14 @@ export const TaskDetail = () => {
               onClick={handleDeleteTask}
               style={{
                 padding: '8px 16px',
-                backgroundColor: '#dc3545',
+                backgroundColor: isAdmin ? '#dc3545' : 'lightgray',
                 color: 'white',
                 border: 'none',
                 borderRadius: '3px',
-                cursor: 'pointer',
+                cursor: isAdmin ? 'pointer' : 'not-allowed',
+                opacity: isAdmin ? 1 : 0.6,
               }}
+              disabled={!isAdmin}
             >
               Delete Task
             </button>

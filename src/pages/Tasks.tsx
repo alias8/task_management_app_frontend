@@ -12,7 +12,7 @@ export const Tasks = () => {
     title: '',
     taskDescription: '',
   });
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
 
   const isFetchingTasks = useRef(false);
 
@@ -224,6 +224,7 @@ export const Tasks = () => {
                         )
                       }
                       style={{ padding: '5px' }}
+                      disabled={!isAdmin}
                     >
                       <option value={TaskStatus.OPEN}>Open</option>
                       <option value={TaskStatus.IN_PROGRESS}>
@@ -235,12 +236,14 @@ export const Tasks = () => {
                       onClick={() => handleDeleteTask(task.taskId)}
                       style={{
                         padding: '5px 10px',
-                        backgroundColor: '#dc3545',
+                        backgroundColor: isAdmin ? '#dc3545' : 'lightgray',
                         color: 'white',
                         border: 'none',
                         borderRadius: '3px',
-                        cursor: 'pointer',
+                        cursor: isAdmin ? 'pointer' : 'not-allowed',
+                        opacity: isAdmin ? 1 : 0.6,
                       }}
+                      disabled={!isAdmin}
                     >
                       Delete
                     </button>
