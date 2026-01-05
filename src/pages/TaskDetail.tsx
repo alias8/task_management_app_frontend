@@ -4,17 +4,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { taskService } from '../services/taskService';
 import { commentService } from '../services/commentService';
 import { type Comment, type Task, TaskStatus } from '../types';
-import { jwtDecode } from 'jwt-decode';
-
-interface JwtPayload {
-  userId: string;
-  isAdmin: boolean;
-}
 
 export const TaskDetail = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const { isAdmin, userId } = useAuth();
   const [task, setTask] = useState<Task | null>(null);
   const [taskLoading, setTaskLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,17 +19,6 @@ export const TaskDetail = () => {
 
   const isFetchingTask = useRef(false);
   const isFetchingComments = useRef(false);
-
-  const getCurrentUserId = (): string | null => {
-    const token = localStorage.getItem('authToken');
-    if (!token) return null;
-    try {
-      const decoded = jwtDecode<JwtPayload>(token);
-      return decoded.userId;
-    } catch {
-      return null;
-    }
-  };
 
   const fetchTask = async () => {
     if (!taskId || isFetchingTask.current) return;
@@ -128,13 +111,6 @@ export const TaskDetail = () => {
     }
   };
 
-  const canDeleteComment = (comment: Comment): boolean => {
-    const currentUserId = getCurrentUserId();
-    return (
-      isAdmin || (currentUserId !== null && comment.userId === currentUserId)
-    );
-  };
-
   if (taskLoading) {
     return <div>Loading...</div>;
   }
@@ -146,7 +122,7 @@ export const TaskDetail = () => {
         <p style={{ color: '#dc3545' }}>{error}</p>
         <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
           <button
-            onClick={() => fetchTask}
+            onClick={() => void fetchTask()}
             style={{
               padding: '8px 16px',
               backgroundColor: '#007bff',
@@ -270,7 +246,7 @@ export const TaskDetail = () => {
         <h2 style={{ marginTop: 0 }}>Comments</h2>
 
         <form
-          onSubmit={() => handleAddComment}
+          onSubmit={e => void handleAddComment(e)}
           style={{ marginBottom: '20px' }}
         >
           <textarea
@@ -338,9 +314,9 @@ export const TaskDetail = () => {
                   <p style={{ margin: '0 0 10px 0', flex: 1 }}>
                     {comment.body}
                   </p>
-                  {canDeleteComment(comment) && (
+                  {userId === comment.userId && (
                     <button
-                      onClick={() => handleDeleteComment(comment.commentId)}
+                      onClick={() => void handleDeleteComment(comment.commentId)}
                       style={{
                         padding: '4px 8px',
                         backgroundColor: '#dc3545',
