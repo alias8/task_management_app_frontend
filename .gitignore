@@ -13,6 +13,9 @@ dist-ssr
 *.local
 .env
 
+# AWS deployment temporary files
+aws/*-temp.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
