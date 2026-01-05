@@ -99,9 +99,19 @@ aws s3 website "s3://$BUCKET_NAME" \
 
 echo -e "${GREEN}✓ Static website hosting enabled${NC}"
 
-# Step 4: Update and apply bucket policy
+# Step 4: Disable Block Public Access (required for public website)
 echo ""
-echo -e "${YELLOW}Step 4: Applying bucket policy...${NC}"
+echo -e "${YELLOW}Step 4: Configuring public access...${NC}"
+aws s3api put-public-access-block \
+    --bucket "$BUCKET_NAME" \
+    --public-access-block-configuration \
+    "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
+
+echo -e "${GREEN}✓ Public access configured${NC}"
+
+# Step 5: Update and apply bucket policy
+echo ""
+echo -e "${YELLOW}Step 5: Applying bucket policy...${NC}"
 
 # Create temporary bucket policy with correct bucket name
 POLICY_FILE="aws/bucket-policy.json"
@@ -123,16 +133,6 @@ aws s3api put-bucket-policy \
 rm "$TEMP_POLICY_FILE"
 
 echo -e "${GREEN}✓ Bucket policy applied${NC}"
-
-# Step 5: Disable Block Public Access (required for public website)
-echo ""
-echo -e "${YELLOW}Step 5: Configuring public access...${NC}"
-aws s3api put-public-access-block \
-    --bucket "$BUCKET_NAME" \
-    --public-access-block-configuration \
-    "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
-
-echo -e "${GREEN}✓ Public access configured${NC}"
 
 # Step 6: Upload files to S3
 echo ""
