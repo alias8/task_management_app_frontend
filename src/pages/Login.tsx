@@ -3,9 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 export const Login = () => {
-  const [orgId, setOrgId] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [orgId, setOrgId] = useState('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11');
+  const [email, setEmail] = useState('alice@acme.com');
+  const [password, setPassword] = useState('password123');
   const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
