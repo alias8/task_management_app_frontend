@@ -37,19 +37,51 @@ fi
 echo -e "${GREEN}✓ All prerequisites met${NC}"
 echo ""
 
-# Get bucket name from user
-read -p "Enter S3 bucket name (e.g., task-manager-frontend): " BUCKET_NAME
+# ==========================================
+# DEFAULT CONFIGURATION
+# Edit these values to avoid typing them each time
+# ==========================================
+DEFAULT_BUCKET_NAME="task-manager-frontend-871268126"
+DEFAULT_AWS_REGION="us-east-1"
+CUSTOM_DOMAIN_URL="https://taskmanager-jkirk-547563.com/login"
+
+# Get bucket name (use env var, default, or prompt)
+if [ ! -z "$BUCKET_NAME" ]; then
+    # Already set via environment variable
+    echo "Using bucket name from environment: $BUCKET_NAME"
+elif [ ! -z "$DEFAULT_BUCKET_NAME" ]; then
+    # Use default value
+    read -p "Enter S3 bucket name [$DEFAULT_BUCKET_NAME]: " INPUT_BUCKET
+    if [ -z "$INPUT_BUCKET" ]; then
+        BUCKET_NAME="$DEFAULT_BUCKET_NAME"
+    else
+        BUCKET_NAME="$INPUT_BUCKET"
+    fi
+else
+    # Prompt for value
+    read -p "Enter S3 bucket name (e.g., task-manager-frontend): " BUCKET_NAME
+fi
 
 if [ -z "$BUCKET_NAME" ]; then
     echo -e "${RED}Error: Bucket name cannot be empty${NC}"
     exit 1
 fi
 
-# Set AWS region
-AWS_REGION="us-east-1"
-read -p "Enter AWS region [us-east-1]: " INPUT_REGION
-if [ ! -z "$INPUT_REGION" ]; then
-    AWS_REGION="$INPUT_REGION"
+# Get AWS region (use env var, default, or prompt)
+if [ ! -z "$AWS_REGION" ]; then
+    # Already set via environment variable
+    echo "Using AWS region from environment: $AWS_REGION"
+elif [ ! -z "$DEFAULT_AWS_REGION" ]; then
+    # Use default value
+    read -p "Enter AWS region [$DEFAULT_AWS_REGION]: " INPUT_REGION
+    if [ -z "$INPUT_REGION" ]; then
+        AWS_REGION="$DEFAULT_AWS_REGION"
+    else
+        AWS_REGION="$INPUT_REGION"
+    fi
+else
+    # Prompt for value
+    read -p "Enter AWS region: " AWS_REGION
 fi
 
 echo ""
@@ -156,6 +188,10 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Deployment Complete!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
+if [ ! -z "$CUSTOM_DOMAIN_URL" ]; then
+    echo -e "${GREEN}✓ Your app is live at: ${YELLOW}$CUSTOM_DOMAIN_URL${NC}"
+    echo ""
+fi
 echo -e "S3 Website URL: ${YELLOW}$S3_WEBSITE_URL${NC}"
 echo ""
 echo -e "${YELLOW}Next Steps:${NC}"
