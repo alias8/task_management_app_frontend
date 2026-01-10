@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { taskService } from '../services/taskService';
 import { type CreateTaskRequest, type Task, TaskStatus } from '../types';
+import { usePageView } from '../hooks/usePageView.ts';
 
 export const Tasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -13,6 +14,7 @@ export const Tasks = () => {
     taskDescription: '',
   });
   const { logout, isAdmin } = useAuth();
+  usePageView(); // Automatically tracks view on mount
 
   const isFetchingTasks = useRef(false);
 
@@ -48,7 +50,10 @@ export const Tasks = () => {
     })();
   };
 
-  const handleUpdateStatus = (taskId: string, status: keyof typeof TaskStatus) => {
+  const handleUpdateStatus = (
+    taskId: string,
+    status: keyof typeof TaskStatus
+  ) => {
     void (async () => {
       try {
         await taskService.updateTask(taskId, { status });
