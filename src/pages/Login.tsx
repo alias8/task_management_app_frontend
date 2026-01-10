@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { usePageView } from '../hooks/usePageView.ts';
+import { analyticsService } from '../services/analyticsService';
 
 export const Login = () => {
   const [orgId, setOrgId] = useState('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11');
@@ -10,7 +10,10 @@ export const Login = () => {
   const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
-  usePageView(); // Automatically tracks view on mount
+
+  useEffect(() => {
+    void analyticsService.trackPageView('login');
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
