@@ -8,12 +8,81 @@ export const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [orgIdError, setOrgIdError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const { signup } = useAuth();
   const navigate = useNavigate();
+
+  const validateEmail = (value: string): string => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      return 'Please enter a valid email address';
+    }
+    return '';
+  };
+
+  const validatePassword = (value: string): string => {
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return '';
+  };
+
+  const validateUUID = (value: string): string => {
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(value)) {
+      return 'Please enter a valid UUID';
+    }
+    return '';
+  };
+
+  const validateName = (value: string): string => {
+    if (value.trim() === '') {
+      return 'Name cannot be empty';
+    }
+    return '';
+  };
+
+  const handleOrgIdChange = (value: string) => {
+    setOrgId(value);
+    setOrgIdError(validateUUID(value));
+  };
+
+  const handleNameChange = (value: string) => {
+    setName(value);
+    setNameError(validateName(value));
+  };
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    setEmailError(validateEmail(value));
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordError(validatePassword(value));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    const orgIdErr = validateUUID(orgId);
+    const nameErr = validateName(name);
+    const emailErr = validateEmail(email);
+    const passwordErr = validatePassword(password);
+
+    setOrgIdError(orgIdErr);
+    setNameError(nameErr);
+    setEmailError(emailErr);
+    setPasswordError(passwordErr);
+
+    if (orgIdErr || nameErr || emailErr || passwordErr) {
+      return;
+    }
 
     void (async () => {
       try {
@@ -40,10 +109,15 @@ export const Signup = () => {
             id="orgId"
             type="text"
             value={orgId}
-            onChange={e => setOrgId(e.target.value)}
+            onChange={e => handleOrgIdChange(e.target.value)}
             required
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
+          {orgIdError && (
+            <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
+              {orgIdError}
+            </div>
+          )}
         </div>
         <div style={{ marginBottom: '15px' }}>
           <label
@@ -56,10 +130,15 @@ export const Signup = () => {
             id="name"
             type="text"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={e => handleNameChange(e.target.value)}
             required
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
+          {nameError && (
+            <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
+              {nameError}
+            </div>
+          )}
         </div>
         <div style={{ marginBottom: '15px' }}>
           <label
@@ -72,10 +151,15 @@ export const Signup = () => {
             id="email"
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={e => handleEmailChange(e.target.value)}
             required
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
+          {emailError && (
+            <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
+              {emailError}
+            </div>
+          )}
         </div>
         <div style={{ marginBottom: '15px' }}>
           <label
@@ -88,11 +172,16 @@ export const Signup = () => {
             id="password"
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={e => handlePasswordChange(e.target.value)}
             required
             minLength={6}
             style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
           />
+          {passwordError && (
+            <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
+              {passwordError}
+            </div>
+          )}
         </div>
         {error && (
           <div style={{ color: 'red', marginBottom: '15px' }}>{error}</div>
