@@ -195,7 +195,7 @@ export const Tasks = () => {
                     <h3 style={{ marginTop: 0 }}>
                       <Link
                         to={`/tasks/${task.taskId}`}
-                        style={{ textDecoration: 'none', color: 'inherit' }}
+                        style={{ textDecoration: 'none', color: '#0066cc' }}
                       >
                         {task.title}
                       </Link>
