@@ -1,6 +1,12 @@
 # Task Management Frontend
 
 A React TypeScript frontend application for the Task Management backend.
+This is an example/demo project showcasing modern React frontend development practices.
+
+# Live Demo
+
+- Live Site: https://taskmanager-jkirk-547563.com/login
+- Backend Repository: https://github.com/alias8/java-spring-backend
 
 ## Features
 
@@ -28,16 +34,19 @@ A React TypeScript frontend application for the Task Management backend.
 ## Setup
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Create a `.env` file in the root directory (or copy from `.env.example`):
+
 ```bash
 cp .env.example .env
 ```
 
 3. Update the `.env` file with your backend API URL if different from default:
+
 ```
 VITE_API_BASE_URL=http://localhost:8080
 ```
@@ -45,6 +54,7 @@ VITE_API_BASE_URL=http://localhost:8080
 ## Development
 
 Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -54,11 +64,13 @@ The application will be available at `http://localhost:5173`
 ## Build
 
 Build for production:
+
 ```bash
 npm run build
 ```
 
 Preview the production build:
+
 ```bash
 npm run preview
 ```
