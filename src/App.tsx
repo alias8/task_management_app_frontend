@@ -5,6 +5,7 @@ import {
   Routes,
 } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { FeatureFlagProvider } from './contexts/FeatureFlagContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { PublicRoute } from './components/PublicRoute';
 import { Login } from './pages/Login';
@@ -15,6 +16,7 @@ import { TaskDetail } from './pages/TaskDetail';
 function App() {
   return (
     <Router>
+      <FeatureFlagProvider>
       <AuthProvider>
         <div>
           <div
@@ -73,6 +75,7 @@ function App() {
           </div>
         </div>
       </AuthProvider>
+      </FeatureFlagProvider>
     </Router>
   );
 }

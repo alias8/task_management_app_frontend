@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useFeatureFlags } from '../contexts/FeatureFlagContext';
 import { taskService } from '../services/taskService';
 import { commentService } from '../services/commentService';
 import { type Comment, type Task, TaskStatus } from '../types';
@@ -9,6 +10,7 @@ export const TaskDetail = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
   const { isAdmin, userId } = useAuth();
+  const { getFeatureFlag } = useFeatureFlags();
   const [task, setTask] = useState<Task | null>(null);
   const [taskLoading, setTaskLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -148,6 +150,8 @@ export const TaskDetail = () => {
       </div>
     );
   }
+  
+  const FF1 = getFeatureFlag("showTaskExtraBanner123")
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
@@ -166,6 +170,7 @@ export const TaskDetail = () => {
         }}
       >
         <h1 style={{ marginTop: 0 }}>{task.title}</h1>
+        {FF1 && <div>Feature flag on</div>}
 
         <div style={{ marginBottom: '20px' }}>
           <h3>Description</h3>
