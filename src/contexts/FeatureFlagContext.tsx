@@ -1,4 +1,5 @@
 import { createContext, type ReactNode, use, useEffect, useMemo, useState } from 'react';
+import { useAuth } from './AuthContext';
 import { bucket } from '../utils/featureFlagBucket';
 
 interface FlagData {
@@ -16,7 +17,7 @@ interface CachedFlag {
 }
 
 interface FeatureFlagContextType {
-  getFeatureFlag: (name: string, userId: string) => boolean;
+  getFeatureFlag: (name: string) => boolean;
 }
 
 
@@ -38,6 +39,7 @@ function toCachedFlag(f: FlagData): CachedFlag {
 }
 
 export function FeatureFlagProvider({ children }: { readonly children: ReactNode }) {
+  const { userId } = useAuth();
   const [flags, setFlags] = useState<Record<string, CachedFlag>>({});
 
   useEffect(() => {
@@ -67,13 +69,13 @@ export function FeatureFlagProvider({ children }: { readonly children: ReactNode
   }, []);
 
   const value = useMemo<FeatureFlagContextType>(() => ({
-    getFeatureFlag(name: string, userId: string): boolean {
+    getFeatureFlag(name: string): boolean {
       const flag = flags[name];
       if (!flag?.enabled) return false;
       if (userId in flag.overrides) return flag.overrides[userId];
       return bucket(name, userId) < flag.rolloutPercentage;
     },
-  }), [flags]);
+  }), [flags, userId]);
 
   return (
     <FeatureFlagContext value={value}>
