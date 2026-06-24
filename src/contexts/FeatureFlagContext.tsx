@@ -39,7 +39,11 @@ function toCachedFlag(f: FlagData): CachedFlag {
 }
 
 export function FeatureFlagProvider({ children }: { readonly children: ReactNode }) {
-  const { userId } = useAuth();
+  /*
+  * About anonymous users for FF eval: The individual user of a task management app will be identified 
+  * by what organization they are logged in as. So there won't be any anonymous users.
+  * */
+  const { orgId } = useAuth();
   const [flags, setFlags] = useState<Record<string, CachedFlag>>({});
 
   useEffect(() => {
@@ -72,10 +76,10 @@ export function FeatureFlagProvider({ children }: { readonly children: ReactNode
     getFeatureFlag(name: string): boolean {
       const flag = flags[name];
       if (!flag?.enabled) return false;
-      if (userId in flag.overrides) return flag.overrides[userId];
-      return bucket(name, userId) < flag.rolloutPercentage;
+      if (orgId in flag.overrides) return flag.overrides[orgId];
+      return bucket(name, orgId) < flag.rolloutPercentage;
     },
-  }), [flags, userId]);
+  }), [flags, orgId]);
 
   return (
     <FeatureFlagContext value={value}>

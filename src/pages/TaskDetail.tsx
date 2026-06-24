@@ -9,7 +9,7 @@ import { type Comment, type Task, TaskStatus } from '../types';
 export const TaskDetail = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
-  const { isAdmin, userId } = useAuth();
+  const { isAdmin, orgId } = useAuth();
   const { getFeatureFlag } = useFeatureFlags();
   const [task, setTask] = useState<Task | null>(null);
   const [taskLoading, setTaskLoading] = useState(true);
@@ -319,7 +319,7 @@ export const TaskDetail = () => {
                   <p style={{ margin: '0 0 10px 0', flex: 1 }}>
                     {comment.body}
                   </p>
-                  {userId === comment.userIdOfCreator && (
+                  {orgId === comment.userIdOfCreator && (
                     <button
                       onClick={() =>
                         void handleDeleteComment(comment.commentId)

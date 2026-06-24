@@ -6,7 +6,8 @@ import { jwtDecode } from 'jwt-decode';
 interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
-  userId: string;
+  orgId: string;
+  orgId: string;
   loading: boolean;
   login: (credentials: LoginRequest) => Promise<void>;
   signup: (userData: CreateUserRequest) => Promise<void>;
@@ -62,7 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         isAuthenticated: !!decodedToken,
         isAdmin: decodedToken?.isAdmin ?? false,
-        userId: decodedToken?.userId ?? '',
+        orgId: decodedToken?.orgId ?? '',
         loading,
         login,
         signup,
